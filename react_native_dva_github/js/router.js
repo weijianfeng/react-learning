@@ -1,30 +1,33 @@
-import React, { PureComponent } from 'react'
-import { BackAndroid } from 'react-native'
+import React, { PureComponent } from 'react';
+import { BackAndroid } from 'react-native';
 import {
   StackNavigator,
   TabNavigator,
   TabBarBottom,
-  addNavigationHelpers,
-  NavigationActions,
-} from 'react-navigation'
-import { connect } from 'dva'
+  addNavigationHelpers
+} from 'react-navigation';
+import { connect } from 'dva';
 
-import Popular from './components/Popular'
-import Account from './components/Account'
+import Popular from './components/Popular';
+import Trending from './components/Trending';
+import Search from './components/Search';
+import Account from './components/Account';
 
 const HomeNavigator = TabNavigator(
   {
     Home: { screen: Popular },
-    Account: { screen: Account },
+    Trending: { screen: Trending },
+    Search: { screen: Search },
+    Account: { screen: Account }
   },
   {
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     swipeEnabled: false,
     animationEnabled: false,
-    lazyLoad: true,
-  },
-)
+    lazyLoad: true
+  }
+);
 
 const MainNavigator = StackNavigator(
   {
@@ -32,9 +35,9 @@ const MainNavigator = StackNavigator(
     //Detail: { screen: Detail },
   },
   {
-    headerMode: 'float',
-  },
-)
+    headerMode: 'float'
+  }
+);
 
 const AppNavigator = StackNavigator(
   {
@@ -45,53 +48,58 @@ const AppNavigator = StackNavigator(
     headerMode: 'none',
     mode: 'modal',
     navigationOptions: {
-      gesturesEnabled: false,
-    },
-  },
-)
+      gesturesEnabled: false
+    }
+  }
+);
 
 function getCurrentScreen(navigationState) {
   if (!navigationState) {
-    return null
+    return null;
   }
-  const route = navigationState.routes[navigationState.index]
+  const route = navigationState.routes[navigationState.index];
   if (route.routes) {
-    return getCurrentScreen(route)
+    return getCurrentScreen(route);
   }
-  return route.routeName
+  return route.routeName;
 }
 
 @connect(({ router }) => ({ router }))
 class Router extends PureComponent {
+  static propTypes = {
+    router: React.PropTypes.object,
+    dispatch: React.PropTypes.func
+  };
+
   componentWillMount() {
-    BackAndroid.addEventListener('hardwareBackPress', this.backHandle)
+    BackAndroid.addEventListener('hardwareBackPress', this.backHandle);
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.backHandle)
+    BackAndroid.removeEventListener('hardwareBackPress', this.backHandle);
   }
 
   backHandle = () => {
-    const currentScreen = getCurrentScreen(this.props.router)
+    const currentScreen = getCurrentScreen(this.props.router);
     if (currentScreen === 'Login') {
-      return true
+      return true;
     }
-    if (currentScreen !== 'Popular') {
-      this.props.dispatch(NavigationActions.back())
-      return true
-    }
-    return false
-  }
+    // if (currentScreen !== 'Home') {
+    //   this.props.dispatch(NavigationActions.back())
+    //   return true
+    // }
+    return false;
+  };
 
   render() {
-    const { dispatch, router } = this.props
-    const navigation = addNavigationHelpers({ dispatch, state: router })
-    return <AppNavigator navigation={navigation} />
+    const { dispatch, router } = this.props;
+    const navigation = addNavigationHelpers({ dispatch, state: router });
+    return <AppNavigator navigation={navigation} />;
   }
 }
 
 export function routerReducer(state, action = {}) {
-  return AppNavigator.router.getStateForAction(action, state)
+  return AppNavigator.router.getStateForAction(action, state);
 }
 
-export default Router
+export default Router;
