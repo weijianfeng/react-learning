@@ -12,14 +12,10 @@ class Popular extends Component {
         style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
         source={require('../assets/person.png')}
       />
-  };
-
-  // gotoLogin = () => {
-  //   this.props.dispatch(NavigationActions.navigate({ routeName: 'Login' }))
-  // }
+  }
 
   render() {
-    return <View style={styles.container} />;
+    return <View style={styles.container}/>;
   }
 }
 

@@ -1,29 +1,29 @@
 {
-	"name": "react_native_dva_github",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
+  "name": "react_native_dva_github",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "lint": "./node_modules/.bin/eslint .",
-    "precommit": "lint-staged",
     "format": "prettier-eslint --write \"js/**/*.js\""
   },
-	"lint-staged": {
+  "lint-staged": {
     "*.js": [
       "prettier-eslint --write",
       "npm run lint",
       "git add"
     ]
   },
-	"dependencies": {
-		"dva": "1.3.0-beta.3",
-		"react": "16.0.0-alpha.6",
-		"react-native": "0.44.2",
-		"react-navigation": "react-community/react-navigation#master",
+  "dependencies": {
+    "dva": "1.3.0-beta.3",
+    "minimal-logger": "^0.3.0",
+    "react": "16.0.0-alpha.6",
+    "react-native": "0.44.2",
+    "react-navigation": "react-community/react-navigation#master",
     "redux-persist": "^4.6.0"
-	},
-	"devDependencies": {
+  },
+  "devDependencies": {
     "babel-eslint": "^7.2.0",
     "babel-jest": "19.0.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -43,7 +43,7 @@
     "prettier-eslint-cli": "^3.1.3",
     "react-test-renderer": "~15.4.1"
   },
-	"jest": {
-		"preset": "react-native"
-	}
+  "jest": {
+    "preset": "react-native"
+  }
 }
