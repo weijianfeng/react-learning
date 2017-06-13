@@ -5,6 +5,7 @@ import logger from 'minimal-logger';
 
 import Router from './router';
 import router from '../js/models/router';
+import popular from '../js/models/popular';
 
 const app = dva({
   initialState: {},
@@ -14,6 +15,7 @@ const app = dva({
 });
 
 app.model(router);
+app.model(popular);
 
 app.router(() => <Router />);
 const App = app.start();

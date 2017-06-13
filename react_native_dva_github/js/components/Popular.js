@@ -1,17 +1,39 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
-import { connect } from 'dva';
+import React, {Component} from 'react';
+import {StyleSheet, View, Image} from 'react-native';
+import {connect} from 'dva';
 
-@connect()
-class Popular extends Component {
+class PopularList extends Component {
   static navigationOptions = {
     title: 'Popular',
     tabBarLabel: 'Popular',
-    tabBarIcon: ({ focused, tintColor }) =>
-      <Image
-        style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
-        source={require('../assets/person.png')}
-      />
+    tabBarIcon: ({focused, tintColor}) => <Image style={[
+      styles.icon, {
+        tintColor: focused
+            ? tintColor
+            : 'gray'
+      }
+    ]} source={require('../assets/person.png')}/>
+  }
+
+  static propTypes = {
+    state: React.PropTypes.object,
+    refresh: React.PropTypes.func,
+    query: React.PropTypes.func
+  };
+
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    const state = this.props.state;
+
+    let payload = {
+      q: 'language:Java',
+      page: state.page,
+      per_page: state.per_page
+    };
+    this.props.refresh(payload);
   }
 
   render() {
@@ -30,5 +52,32 @@ const styles = StyleSheet.create({
     height: 32
   }
 });
+
+function mapStateToProps(state) {
+  return {state: state.popular};
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    query: options => {
+      dispatch({
+        type: 'popular/query',
+        payload: {
+          queryParams: options
+        }
+      });
+    },
+    refresh: options => {
+      dispatch({
+        type: 'popular/refresh',
+        payload: {
+          queryParams: options
+        }
+      });
+    }
+  };
+}
+
+const Popular = connect(mapStateToProps, mapDispatchToProps)(PopularList);
 
 export default Popular;

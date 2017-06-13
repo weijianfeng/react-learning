@@ -1,18 +1,25 @@
-import queryPopularList from '../services/github';
+import { queryPopularList } from '../services/github';
+import logger from 'minimal-logger';
 
 export default {
-  namespace: 'popular',
+  namespace : 'popular',
 
-  state: {
+  state : {
     items: [],
-    toPage: 1,
-    pageSize: 10,
+    page: 1,
+    per_page: 10,
     noMore: false
   },
 
-  effects: {
-    *query({ payload }, { call, put }) {
-      yield put({ type: 'showLoading' });
+  effects : {
+    *query({ payload }, {call, put}) {
+      yield put({
+        type: 'showLoading',
+        payload: {
+          ...payload.queryParams
+        }
+      });
+
       const data = yield call(queryPopularList, payload);
       if (data) {
         yield put({
@@ -24,8 +31,14 @@ export default {
         });
       }
     },
-    *refresh({ payload }, { call, put }) {
-      yield put({ type: 'showRefreshing' });
+
+    *refresh({ payload }, {call, put}) {
+      yield put({
+        type: 'showLoading',
+        payload: {
+          ...payload.queryParams
+        }
+      });
       try {
         const data = yield call(queryPopularList, payload);
         if (data) {
@@ -38,12 +51,12 @@ export default {
           });
         }
       } catch (err) {
-        yield put({ type: 'refreshFailed' });
+        yield put({type: 'refreshFailed'});
       }
     }
   },
 
-  reducers: {
+  reducers : {
     showLoading(state) {
       return {
         ...state,
@@ -53,15 +66,15 @@ export default {
     querySuccess(state, action) {
       let payload = action.payload;
 
-      let { toPage, noMore } = state;
-      if (payload.total_num >= state.pageSize) {
-        toPage++;
+      let {page, noMore} = state;
+      if (payload.total_num >= state.per_page) {
+        page++;
       } else {
         noMore = true;
       }
       return {
         ...state,
-        toPage: toPage,
+        page: page,
         noMore: noMore,
         items: [
           ...state.items,
@@ -80,16 +93,16 @@ export default {
 
     refreshSuccess(state, action) {
       let payload = action.payload;
-      let { toPage, noMore } = state;
-      toPage = 1;
-      if (payload.total_num >= state.pageSize) {
-        toPage++;
+      let {page, noMore} = state;
+      page = 1;
+      if (payload.total_num >= state.per_page) {
+        page++;
       } else {
         noMore = true;
       }
       return {
         ...state,
-        toPage: toPage,
+        page: page,
         noMore: noMore,
         items: payload.items,
         loading: false,

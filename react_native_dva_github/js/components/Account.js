@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
-import { connect } from 'dva';
+import React, {Component} from 'react';
+import {StyleSheet, View, Image} from 'react-native';
+import {connect} from 'dva';
 
 @connect()
 class Account extends Component {
   static navigationOptions = {
     title: 'Account',
     tabBarLabel: 'Account',
-    tabBarIcon: ({ focused, tintColor }) =>
-      <Image
-        style={[styles.icon, { tintColor: focused ? tintColor : 'gray' }]}
-        source={require('../assets/person.png')}
-      />
+    tabBarIcon: ({focused, tintColor}) => <Image style={[
+      styles.icon, {
+        tintColor: focused
+            ? tintColor
+            : 'gray'
+      }
+    ]} source={require('../assets/person.png')}/>
   };
 
-  // gotoLogin = () => {
-  //   this.props.dispatch(NavigationActions.navigate({ routeName: 'Login' }))
-  // }
-
   render() {
-    return <View style={styles.container} />;
+    return <View style={styles.container}/>;
   }
 }
 
